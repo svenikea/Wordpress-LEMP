@@ -1,0 +1,61 @@
+version: '3'
+
+volumes:
+        wordpress:
+        db:
+
+services:
+        wordpress:
+                image: wordpress:5.7.1-fpm-alpine
+                restart: always
+                container_name: wordpress
+                hostname: wordpress
+                environment:
+                        WORDPRESS_DB_HOST: mysql:3306
+                        WORDPRESS_DB_USER: container
+                        WORDPRESS_DB_PASSWORD: container
+                        WORDPRESS_DB_NAME: content
+                        WORDPRESS_TABLE_PREFIX: wp_
+                        WORDPRESS_DEBUG: 1
+                volumes:
+                        - wordpress:/var/www/html
+                        - ./wordpress/wp-config/my-wp-config-docker.php:/var/www/html/wp-config.php
+                        - ./wordpress/php-fpm/my-php-development.ini:/usr/local/etc/php/php.ini
+                depends_on:
+                        - db
+                ports:
+                        - 9000:9000
+
+        db:
+                image: mysql:5.7
+                restart: always
+                hostname: mysql
+                container_name: db
+                environment:
+                        MYSQL_DATABASE: content
+                        MYSQL_USER: container
+                        MYSQL_PASSWORD: container
+                        MYSQL_RANDOM_ROOT_PASSWORD: '1'
+                volumes:
+                        - db:/var/lib/mysql
+                ports:
+                        - 3306:3306
+        web:
+                image: nginx:1.19.10-alpine
+                hostname: web
+                container_name: web
+                ports:
+                        - 80:80
+                        - 443:443
+                volumes:
+                        - wordpress:/var/www/html
+                        - ./nginx/my-nginx.conf:/etc/nginx/nginx.conf
+                        - ./nginx/my-default.conf:/etc/nginx/conf.d/wordpress.conf
+                        - ./nginx/ssl:/etc/nginx/certs/
+                depends_on:
+                        - db
+                        - wordpress
+networks:
+        default:
+                external:
+                        name: net
