@@ -45,3 +45,8 @@ docker-compose up
 Testing your site by typing your host IP address with port 443 for ssl connection
 
 
+## Securing Docker daemon with TLS and remote access to Docker Engine (Optional)
+
+> To directly control the Docker Engine inside remote VM or cloud servers without having to resolve with SSH connection. Even tho SSH connection is practically secure with private key from the client side and public key on the server side but the SSH protocol uses port 22 which is a well-known port that many outsiders already knew and may attempt to access it and login to the VM. Instead, if the VM is only running docker then the client side doesn't need to access and control the Docker Engine via SSH connection (the client side could if they want to).
+> For more information, click [here](./REMOTE.MD)
+
