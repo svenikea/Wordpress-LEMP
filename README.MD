@@ -50,13 +50,13 @@ Testing your site by typing your host IP address with port 443 for ssl connectio
 
 > To increase the maximum file size to upload on WordPress, change these setting to enables it
 
-* Nginx Configuration
+* Nginx Configuration [nginx.conf](./nginx/my-nginx.conf)
 
 ```
 client_max_body_size 100M # Can be increase at any size, using M at standard size
 ```
 
-* PHP-FPM Configuration
+* PHP-FPM Configuration [php.init](./wordpress/php-fpm/my-php-development.ini)
 
 ```
 post_max_size = 200M
