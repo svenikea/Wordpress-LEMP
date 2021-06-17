@@ -44,6 +44,24 @@ docker-compose up
 ## Testing 
 Testing your site by typing your host IP address with port 443 for ssl connection
 
+## Optional Configuration
+
+### Change the max file size for upload
+
+> To increase the maximum file size to upload on WordPress, change these setting to enables it
+
+* Nginx Configuration
+
+```
+client_max_body_size 100M # Can be increase at any size, using M at standard size
+```
+
+* PHP-FPM Configuration
+
+```
+post_max_size = 200M
+upload_max_filesize = 200M # Can be increase at any size, using M at standard size
+```
 
 ## Securing Docker daemon with TLS and remote access to Docker Engine (Optional)
 
