@@ -9,7 +9,7 @@ services:
                 image: wordpress:5.7.1-fpm-alpine
                 restart: always
                 container_name: ${WP_CONTAINER_NAME}
-                hostname: w${WP_HOSTNAME}
+                hostname: ${WP_HOSTNAME}
                 environment:
                         WORDPRESS_DB_HOST: ${DATABASE_HOSTNAME}:3306
                         WORDPRESS_DB_USER: ${DATABASE_USER}
@@ -29,7 +29,7 @@ services:
         db:
                 image: mysql:5.7
                 restart: always
-                hostname: ${DATABASE_TABLE}
+                hostname: ${DATABASE_HOSTNAME}
                 container_name: ${DATABASE_CONTAINER_NAME}
                 environment:
                         MYSQL_DATABASE: ${DATABASE_TABLE}
