@@ -22,13 +22,11 @@ apt () {
 }
 
 yum () {
-	sudo yum update -y
 	sudo yum install -y yum-utils
 	# Add Docker repository
 	sudo yum-config-manager \
 		--add-repo \
 		https://download.docker.com/linux/centos/docker-ce.repo
-	sudo yum update -y 
 	sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose
 }
 
@@ -65,8 +63,8 @@ wp_hostname=${wp_hostname:-wordpress}
 ## Database
 read -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
-read -p "Database Hostname (Default is mysql): " db_hostname
-db_hostname=${db_hostname:-mysql}
+#read -p "Database Hostname (Default is mysql): " db_hostname
+#db_hostname=${db_hostname:-mysql}
 read -p "Database Database Name (Default is content): " db_table
 db_table=${db_table:-content}
 read -p "Database User Name (Default is user): " db_username
@@ -86,12 +84,13 @@ sed "s/net/$network_name/g" -i .env
 sed "s/wp/$wp_container_name/g" -i .env
 sed "s/wordpress/$wp_hostname/g" -i .env
 sed "s/db/$db_hostname/g" -i .env
-sed "s/mysql/$db_table/g" -i .env
+#sed "s/mysql/$db_table/g" -i .env
 sed "s/user/$db_username/g" -i .env
 sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
+
 
 # Start Docker Systemd
 sudo systemctl start docker
