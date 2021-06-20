@@ -71,7 +71,7 @@ read -p "Database Database Name (Default is content): " db_table
 db_table=${db_table:-content}
 read -p "Database User Name (Default is user): " db_username
 db_username=${db_username:-user}
-read -sp "Database User Password (Default is password): " db_password
+read -p "Database User Password (Default is password): " db_password
 db_password=${db_password:-password}
 
 
@@ -97,5 +97,6 @@ sed 's/web/$web_hostname/g' -i .env
 sudo systemctl start docker
 sudo systemctl enable
 
-# Run the Docker COmpose
+# Run the Docker Compose
+sudo docker create -d bridge $network_name
 sudo docker-compose up
