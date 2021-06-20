@@ -8,13 +8,13 @@ services:
         wordpress:
                 image: wordpress:5.7.1-fpm-alpine
                 restart: always
-                container_name: wordpress
-                hostname: wordpress
+                container_name: ${WP_CONTAINER_NAME}
+                hostname: w${WP_HOSTNAME}
                 environment:
-                        WORDPRESS_DB_HOST: mysql:3306
-                        WORDPRESS_DB_USER: container
-                        WORDPRESS_DB_PASSWORD: container
-                        WORDPRESS_DB_NAME: content
+                        WORDPRESS_DB_HOST: ${DATABASE_HOSTNAME}:3306
+                        WORDPRESS_DB_USER: ${DATABASE_USER}
+                        WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
+                        WORDPRESS_DB_NAME: ${DATABASE_TABLE}
                         WORDPRESS_TABLE_PREFIX: wp_
                         WORDPRESS_DEBUG: 1
                 volumes:
@@ -29,12 +29,12 @@ services:
         db:
                 image: mysql:5.7
                 restart: always
-                hostname: mysql
-                container_name: db
+                hostname: ${DATABASE_TABLE}
+                container_name: ${DATABASE_CONTAINER_NAME}
                 environment:
-                        MYSQL_DATABASE: content
-                        MYSQL_USER: container
-                        MYSQL_PASSWORD: container
+                        MYSQL_DATABASE: ${DATABASE_TABLE}
+                        MYSQL_USER: ${DATABASE_USER}
+                        MYSQL_PASSWORD: ${DATABASE_PASSWORD}
                         MYSQL_RANDOM_ROOT_PASSWORD: '1'
                 volumes:
                         - db:/var/lib/mysql
@@ -42,8 +42,8 @@ services:
                         - 3306:3306
         web:
                 image: nginx:1.19.10-alpine
-                hostname: web
-                container_name: web
+                hostname: ${WEB_HOSTNAME}
+                container_name: ${WEB_CONTAINER_NAME}
                 ports:
                         - 80:80
                         - 443:443
@@ -58,4 +58,4 @@ services:
 networks:
         default:
                 external:
-                        name: net
+                        name: ${NETWORK}
