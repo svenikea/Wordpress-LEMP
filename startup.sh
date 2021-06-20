@@ -52,7 +52,7 @@ clear
 sudo usermod -aG docker $(whoami)
 
 # Asking for network name for docker
-read -p "Network Name: (Default is net)" network_name
+read -p "Network Name (Default is net): " network_name
 network_name=${network_name:-net}
 
 # Asking for Container name
@@ -82,21 +82,21 @@ read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
 
 # Export all variable to the environment file
-sed 's/net/$network_name/g' -i .env
-sed 's/wp/$wp_container_name/g' -i .env
-sed 's/wordpress/$wp_hostname/g' -i .env
-sed 's/db/$db_hostname/g' -i .env
-sed 's/mysql/$db_table/g' -i .env
-sed 's/user/$db_username/g' -i .env
-sed 's/password/$db_password/g' -i .env
-sed 's/content/$db_table/g' -i .env
-sed 's/web/$web_container_name/g' -i .env
-sed 's/web/$web_hostname/g' -i .env
+sed "s/net/$network_name/g" -i .env
+sed "s/wp/$wp_container_name/g" -i .env
+sed "s/wordpress/$wp_hostname/g" -i .env
+sed "s/db/$db_hostname/g" -i .env
+sed "s/mysql/$db_table/g" -i .env
+sed "s/user/$db_username/g" -i .env
+sed "s/password/$db_password/g" -i .env
+sed "s/content/$db_table/g" -i .env
+sed "s/web/$web_container_name/g" -i .env
+sed "s/web/$web_hostname/g" -i .env
 
 # Start Docker Systemd
 sudo systemctl start docker
 sudo systemctl enable
 
 # Run the Docker Compose
-sudo docker create -d bridge $network_name
-sudo docker-compose up
+sudo docker network create -d bridge ${network_name}
+sudo docker-compose up -d
