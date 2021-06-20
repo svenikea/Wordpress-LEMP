@@ -5,7 +5,7 @@ source /etc/os-release
 
 apt () {
 	sudo apt-get update
-	sudo apt-get install \
+	sudo apt-get -y install \
 		apt-transport-https \
 		ca-certificates \
 		curl \
@@ -18,7 +18,7 @@ apt () {
 		"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
 		$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	sudo apt-get update
-	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+	sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose
 }
 
 yum () {
@@ -29,7 +29,7 @@ yum () {
 		--add-repo \
 		https://download.docker.com/linux/centos/docker-ce.repo
 	sudo yum update
-	sudo yum install docker-ce docker-ce-cli containerd.io docker-compose
+	sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose
 }
 
 
@@ -57,28 +57,28 @@ network_name=${network_name:-net}
 
 # Asking for Container name
 ## Wordpress 
-read -p "Wordpress Container Name: (Default is wp)" wp_container_name
+read -p "Wordpress Container Name (Default is wp): " wp_container_name
 wp_container_name=${wp_container_name:-wp}
-read -p "Wordpress  Hostname: (Default is wordpress)" wp_hostname
+read -p "Wordpress  Hostname (Default is wordpress): " wp_hostname
 wp_hostname=${wp_hostname:-wordpress}
 
 ## Database
-read -p "Database Container Name: (Default is db)" db_container_name
+read -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
-read -p "Database Hostname: (Default is mysql)" db_hostname
+read -p "Database Hostname (Default is mysql): " db_hostname
 db_hostname=${db_hostname:-mysql}
-read -p "Database Database Name: (Default is content)" db_table
+read -p "Database Database Name (Default is content): " db_table
 db_table=${db_table:-content}
-read -p "Database User Name: (Default is user)" db_username
+read -p "Database User Name (Default is user): " db_username
 db_username=${db_username:-user}
-read -sp "Database User Password: (Default is password)" db_password
+read -sp "Database User Password (Default is password): " db_password
 db_password=${db_password:-password}
 
 
 ## Website
-read -p "Web Container name: (Default is web)" web_container_name
+read -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
-read -p "Web hostname: (Default is web)" web_hostname
+read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
 
 # Export all variable to the environment file
