@@ -70,7 +70,7 @@ wp_hostname=${wp_hostname:-wordpress}
 ## Database
 read -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
-#read -p "Database Hostname (Default is mysql): " db_hostname
+read -p "Database Hostname (Default is mysql): " db_hostname
 db_hostname=${db_hostname:-mysql}
 read -p "Database Database Name (Default is content): " db_table
 db_table=${db_table:-content}
@@ -92,6 +92,8 @@ keyname+='.key'
 read -p "The Cert name (Default is server): " certname
 certname=${certname:-server}
 certname+='.crt'
+read -p "How many days does this key will expires (Default is 365): " days
+days=${days:-365}
 
 
 # Creating key for SSL connection
