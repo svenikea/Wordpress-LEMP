@@ -30,7 +30,10 @@ yum () {
 	sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose
 }
 
-
+pacman () {
+	sudo pacman -Sy
+	sudo pacman -S docker docker-compose git base-devel --needed
+}
 
 if [[ $ID == "debian" || $ID == "ubuntu" ]] 
 then
@@ -40,6 +43,10 @@ elif [[ $ID == "centos" || $ID == "rhel"  ]]
 then
 	echo "Detected $PRETTY_NAME which is supported"
 	yum
+elif [[ $PID == "arch" || $PID == "manjaro" ]]
+then
+	echo "Detected $PRETTY_NAME which is supported"
+	pacman
 else 
 	echo "Unsupported Distribution"
 fi
@@ -64,7 +71,7 @@ wp_hostname=${wp_hostname:-wordpress}
 read -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
 #read -p "Database Hostname (Default is mysql): " db_hostname
-#db_hostname=${db_hostname:-mysql}
+db_hostname=${db_hostname:-mysql}
 read -p "Database Database Name (Default is content): " db_table
 db_table=${db_table:-content}
 read -p "Database User Name (Default is user): " db_username
@@ -78,18 +85,34 @@ read -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
 read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
+echo "SSL Connection keys and Cert"
+read -p "The key name (Default is server): " keyname
+keyname=${keyname:-server}
+keyname+='.key'
+read -p "The Cert name (Default is server): " certname
+certname=${certname:-server}
+certname+='.crt'
+
+
+# Creating key for SSL connection
+sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
 # Export all variable to the environment file
 sed "s/net/$network_name/g" -i .env
 sed "s/wp/$wp_container_name/g" -i .env
 sed "s/wordpress/$wp_hostname/g" -i .env
 sed "s/db/$db_hostname/g" -i .env
-#sed "s/mysql/$db_table/g" -i .env
+sed "s/mysql/$db_table/g" -i .env
 sed "s/user/$db_username/g" -i .env
 sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
+sed "s/server.key/$keyname/g" -i .env
+sed "s/server.crt/$certname/g" -i .env
+sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
+sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
+sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config.php
 
 
 # Start Docker Systemd
