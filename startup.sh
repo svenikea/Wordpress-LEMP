@@ -27,7 +27,11 @@ yum () {
 	sudo yum-config-manager \
 		--add-repo \
 		https://download.docker.com/linux/centos/docker-ce.repo
-	sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose
+	sudo yum install -y docker-ce docker-ce-cli containerd.io 
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
 }
 
 pacman () {
@@ -85,19 +89,19 @@ read -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
 read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
-echo "SSL Connection keys and Cert"
-read -p "The key name (Default is server): " keyname
-keyname=${keyname:-server}
-keyname+='.key'
-read -p "The Cert name (Default is server): " certname
-certname=${certname:-server}
-certname+='.crt'
-read -p "How many days does this key will expires (Default is 365): " days
-days=${days:-365}
+#echo "SSL Connection keys and Cert"
+#read -p "The key name (Default is server): " keyname
+#keyname=${keyname:-server}
+#keyname+='.key'
+#read -p "The Cert name (Default is server): " certname
+#certname=${certname:-server}
+#certname+='.crt'
+#read -p "How many days does this key will expires (Default is 365): " days
+#days=${days:-365}
 
 
 # Creating key for SSL connection
-sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
+#sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
 # Export all variable to the environment file
 sed "s/net/$network_name/g" -i .env
@@ -110,10 +114,10 @@ sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
-sed "s/server.key/$keyname/g" -i .env
-sed "s/server.crt/$certname/g" -i .env
-sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
-sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
+#sed "s/server.key/$keyname/g" -i .env
+#sed "s/server.crt/$certname/g" -i .env
+#sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
+#sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config.php
 
 
