@@ -107,8 +107,8 @@ web_hostname=${web_hostname:-web}
 sed "s/net/$network_name/g" -i .env
 sed "s/wp/$wp_container_name/g" -i .env
 sed "s/wordpress/$wp_hostname/g" -i .env
-sed "s/db/$db_hostname/g" -i .env
-sed "s/mysql/$db_table/g" -i .env
+sed "s/mysql/$db_hostname/g" -i .env
+sed "s/db/$db_container_name/g" -i .env
 sed "s/user/$db_username/g" -i .env
 sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
@@ -128,3 +128,18 @@ sudo systemctl enable
 # Run the Docker Compose
 sudo docker network create -d bridge ${network_name}
 sudo docker-compose up -d
+web_ip=$(sudo docker inspect $web_container_name | grep '"IPAddress": "1' | tr -d  '", ' | cut -d ':' -f2)
+database_ip=$(sudo docker inspect $db_container_name | grep '"IPAddress": "1' | tr -d  '", ' | cut -d ':' -f2)
+wordpress_ip=$(sudo docker inspect $wp_container_name | grep '"IPAddress": "1' | tr -d  '", ' | cut -d ':' -f2)
+echo "============================================="
+echo "|     Container      |      IP Address      |"
+echo "---------------------------------------------"
+echo "| $wp_container_name | $wordpress_ip        |"
+echo "---------------------------------------------"
+echo "| $db_container_name | $database_ip         |"
+echo "---------------------------------------------"
+echo "| $web_container_name| $web_ip              |"
+echo "============================================="
+
+
+echo "Go to this IP $web_ip or address on your browser and check it out"
