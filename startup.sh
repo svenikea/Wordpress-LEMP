@@ -139,12 +139,10 @@ wordpress_ip=$(sudo docker inspect $wp_container_name | grep '"IPAddress": "1' |
 echo "============================================="
 echo "|     Container      |      IP Address      |"
 echo "---------------------------------------------"
-echo "| $wp_container_name | $wordpress_ip        |"
+echo "|		$wp_container_name	   |     $wordpress_ip    		  |"
 echo "---------------------------------------------"
-echo "| $db_container_name | $database_ip         |"
+echo "|  $db_container_name		   |    $database_ip           	  |"
 echo "---------------------------------------------"
-echo "| $web_container_name| $web_ip              |"
+echo "|	$web_container_name		   |	$web_ip 		  |"
 echo "============================================="
-
-
 echo "Go to this IP $web_ip or address on your browser and check it out"
