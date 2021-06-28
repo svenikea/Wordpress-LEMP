@@ -99,8 +99,8 @@ web_hostname=${web_hostname:-web}
 #certname+='.crt'
 #read -p "How many days does this key will expires (Default is 365): " days
 #days=${days:-365}
-read -p "Specify the max file size in (M) allowed to upload: " file_size
-read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
+#read -p "Specify the max file size in (M) allowed to upload: " file_size
+#read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 
 # Creating key for SSL connection
 #sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
@@ -119,9 +119,9 @@ sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
-sed "s/100M/$file_size/g" -i ./nginx/my-nginx.conf
-sed "s/post_max_size = 100M/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
-sed "s/upload_max_filesize = 200M/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+#sed "s/100M/$file_size/g" -i ./nginx/my-nginx.conf
+#sed "s/post_max_size = 100M/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+#sed "s/upload_max_filesize = 200M/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
 #sed "s/server.key/$keyname/g" -i .env
 #sed "s/server.crt/$certname/g" -i .env
 #sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
@@ -129,10 +129,10 @@ sed "s/upload_max_filesize = 200M/upload_max_filesize = $file_size/g" -i ./wordp
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config.php
 
-if [[ $allowed_unfilterd == "yes" ]]
-then
-	echo "define('ALLOW_UNFILTERED_UPLOADS', true);" >> ./wordpress/wp-config/my-wp-config-docker.php
-fi
+#if [[ $allowed_unfilterd == "yes" ]]
+#then
+#	echo "define('ALLOW_UNFILTERED_UPLOADS', true);" >> ./wordpress/wp-config/my-wp-config-docker.php
+#fi
 
 
 
