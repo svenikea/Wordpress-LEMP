@@ -90,23 +90,24 @@ read -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
 read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
-echo "SSL Connection keys and Cert"
-read -p "The key name (Default is server): " keyname
-keyname=${keyname:-server}
-keyname+='.key'
-read -p "The Cert name (Default is server): " certname
-certname=${certname:-server}
-certname+='.crt'
-read -p "How many days does this key will expires (Default is 365): " days
-days=${days:-365}
-
+#echo "SSL Connection keys and Cert"
+#read -p "The key name (Default is server): " keyname
+#keyname=${keyname:-server}
+#keyname+='.key'
+#read -p "The Cert name (Default is server): " certname
+#certname=${certname:-server}
+#certname+='.crt'
+#read -p "How many days does this key will expires (Default is 365): " days
+#days=${days:-365}
+read -p "Specify the max file size in (M) allowed to upload: " file_size
+read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 
 # Creating key for SSL connection
 #sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
-openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out ./nginx/ssl/${keyname}
-openssl req -new -sha256 -key ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
-openssl req -key ./nginx/ssl/${keyname} -x509 -new -days days -out ./nginx/ssl/test.csr
+#openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out ./nginx/ssl/${keyname}
+#openssl req -new -sha256 -key ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
+#openssl req -key ./nginx/ssl/${keyname} -x509 -new -days days -out ./nginx/ssl/test.csr
 # Export all variable to the environment file
 sed "s/net/$network_name/g" -i .env
 sed "s/wp/$wp_container_name/g" -i .env
@@ -118,12 +119,21 @@ sed "s/password/$db_password/g" -i .env
 sed "s/content/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
-sed "s/server.key/$keyname/g" -i .env
-sed "s/server.crt/$certname/g" -i .env
-sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
-sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
+sed "s/100M/$file_size/g" -i ./nginx/my-nginx.conf
+sed "s/post_max_size = 100M/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+sed "s/upload_max_filesize = 200M/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+#sed "s/server.key/$keyname/g" -i .env
+#sed "s/server.crt/$certname/g" -i .env
+#sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
+#sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config.php
+
+if [[ $allowed_unfilterd == "yes" ]]
+then
+	echo "define('ALLOW_UNFILTERED_UPLOADS', true);" >> ./wordpress/wp-config/my-wp-config-docker.php
+fi
+
 
 
 # Start Docker Systemd
