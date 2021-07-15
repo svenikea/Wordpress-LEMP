@@ -137,7 +137,7 @@ sed "s/web/$web_hostname/g" -i .env
 #sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
 #sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
-sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config.php
+sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
 #if [[ $allowed_unfilterd == "yes" ]]
 #then
