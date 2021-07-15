@@ -87,8 +87,8 @@ read -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
 read -p "Database Hostname (Default is mysql): " db_hostname
 db_hostname=${db_hostname:-mysql}
-read -p "Database Database Name (Default is content): " db_table
-db_table=${db_table:-content}
+read -p "Database Database Name (Default is mysql): " db_table
+db_table=${db_table:-mysql}
 read -p "Database User Name (Default is user): " db_username
 db_username=${db_username:-user}
 read -p "Database User Password (Default is password): " db_password
@@ -126,7 +126,7 @@ sed "s/mysql/$db_hostname/g" -i .env
 sed "s/db/$db_container_name/g" -i .env
 sed "s/user/$db_username/g" -i .env
 sed "s/password/$db_password/g" -i .env
-sed "s/content/$db_table/g" -i .env
+sed "s/mysql/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
 #sed "s/100M/$file_size/g" -i ./nginx/my-nginx.conf
@@ -165,4 +165,4 @@ echo "|  $db_container_name		   |    $database_ip           	  |"
 echo "---------------------------------------------"
 echo "|	$web_container_name		   |	$web_ip 		  |"
 echo "============================================="
-echo "Go to this IP $web_ip or address on your browser and check it out"
+echo "Go to this IP $web_ip or address of this system and go to your browser and check it out"
