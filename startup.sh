@@ -129,9 +129,9 @@ sed "s/password/$db_password/g" -i .env
 sed "s/mysql/$db_table/g" -i .env
 sed "s/web/$web_container_name/g" -i .env
 sed "s/web/$web_hostname/g" -i .env
-#sed "s/100M/$file_size/g" -i ./nginx/my-nginx.conf
-#sed "s/post_max_size = 100M/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
-#sed "s/upload_max_filesize = 200M/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+sed "s/>MB>/$file_size/g" -i ./nginx/my-nginx.conf
+sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
 #sed "s/server.key/$keyname/g" -i .env
 #sed "s/server.crt/$certname/g" -i .env
 #sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
