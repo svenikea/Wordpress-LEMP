@@ -109,8 +109,8 @@ web_hostname=${web_hostname:-web}
 #certname+='.crt'
 #read -p "How many days does this key will expires (Default is 365): " days
 #days=${days:-365}
-read -p "Specify the max file size in (MB) allowed to upload (Default is 100MB): " file_size
-file_size=${file_size:-100MB}
+read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
+file_size=${file_size:-100M}
 #read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 
 # Creating key for SSL connection
