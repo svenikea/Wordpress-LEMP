@@ -92,6 +92,8 @@ define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'put you
  * a unique prefix. Only numbers, letters, and underscores please!
  */
 $table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
+<ALlow_Filter>
+
 
 /**
  * For developers: WordPress debugging mode.
