@@ -111,7 +111,7 @@ web_hostname=${web_hostname:-web}
 #days=${days:-365}
 read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
-#read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
+read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 
 # Creating key for SSL connection
 #sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
@@ -140,10 +140,10 @@ sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./wordp
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
-#if [[ $allowed_unfilterd == "yes" ]]
-#then
-#	echo "define('ALLOW_UNFILTERED_UPLOADS', true);" >> ./wordpress/wp-config/my-wp-config-docker.php
-#fi
+if [[ $allowed_unfilterd == "yes" ]]
+then
+	echo "define('ALLOW_UNFILTERED_UPLOADS', true);" >> ./wordpress/wp-config/my-wp-config-docker.php
+fi
 
 
 
