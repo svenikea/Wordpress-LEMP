@@ -100,25 +100,23 @@ read -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
 read -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
-#echo "SSL Connection keys and Cert"
-#read -p "The key name (Default is server): " keyname
-#keyname=${keyname:-server}
-#keyname+='.key'
-#read -p "The Cert name (Default is server): " certname
-#certname=${certname:-server}
-#certname+='.crt'
-#read -p "How many days does this key will expires (Default is 365): " days
-#days=${days:-365}
+echo "SSL Connection keys and Cert"
+read -p "The key name (Default is server): " keyname
+keyname=${keyname:-server}
+keyname+='.key'
+read -p "The Cert name (Default is server): " certname
+certname=${certname:-server}
+certname+='.crt'
+read -p "How many days does this key will expires (Default is 365): " days
+days=${days:-365}
 read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 
 # Creating key for SSL connection
-#sudo openssl req -x509 -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
-#openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out ./nginx/ssl/${keyname}
-#openssl req -new -sha256 -key ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
-#openssl req -key ./nginx/ssl/${keyname} -x509 -new -days days -out ./nginx/ssl/test.csr
+sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
+
 # Export all variable to the environment file
 sed "s/net/$network_name/g" -i .env
 sed "s/wp/$wp_container_name/g" -i .env
@@ -133,10 +131,10 @@ sed "s/web/$web_hostname/g" -i .env
 sed "s/<MB>/$file_size/g" -i ./nginx/my-nginx.conf
 sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
 sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
-#sed "s/server.key/$keyname/g" -i .env
-#sed "s/server.crt/$certname/g" -i .env
-#sed "s/server.key/$keyname/g" -i ./nginx/my-default.conf
-#sed "s/server.crt/$certname/g" -i ./nginx/my-default.conf
+sed "s/<key>/$keyname/g" -i .env
+sed "s/<certificate>/$certname/g" -i .env
+sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
+sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
