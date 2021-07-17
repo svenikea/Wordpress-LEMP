@@ -112,6 +112,8 @@ days=${days:-365}
 read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
+read -p "Specify the domain name: " domain
+
 
 # Creating key for SSL connection
 
@@ -137,7 +139,7 @@ sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
-
+sed "s/<domain>/$domain/g" -i .env
 if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
 then
 	sed  "s/<ALlow_Filter>/define('ALLOW_UNFILTERED_UPLOADS', true);/g" -i ./wordpress/wp-config/my-wp-config-docker.php

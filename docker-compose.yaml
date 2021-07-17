@@ -55,6 +55,7 @@ services:
                 depends_on:
                         - db
                         - wordpress
+                command: apk add certbot certbot-nginx && cd /etc/nginx/certs && certbot --nginx -d ${WEB_DOMAIN} -d www.${WEB_DOMAIN} && nginx -g daemon off;
 networks:
         default:
                 external:
