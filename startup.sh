@@ -116,7 +116,7 @@ read -p "Specify the domain name: " domain
 
 
 # Creating key for SSL connection
-
+sudo mkdir ./nginx/ssl
 sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
 # Export all variable to the environment file
