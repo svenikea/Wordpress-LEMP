@@ -112,7 +112,7 @@ days=${days:-365}
 read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
-read -p "Specify the server name" 	server_name
+read -p "Specify the server name: " 	server_name
 server_name=${server_name:-localhost}
 
 
