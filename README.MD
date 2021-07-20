@@ -1,4 +1,4 @@
-# Wordpress with LEMP Technology Stack in Docker 
+# Wordpress with LEMP Technology Stack in Docker Container
 The following image have been used:
 
 * PHP 7.4.19
@@ -8,7 +8,7 @@ The following image have been used:
 
 ## Startup Wizard 
 
-> using startup file to run and install the project
+> Using the startup wizard to install and run the project
 
 ```bash
 git clone https://github.com/kynguyen98/wordpress-LEMP.git
@@ -18,30 +18,25 @@ sudo ./startup.sh
 ```
 
 
-## Manually Install 
+## Manual Install 
 ### Dependencies
 * Docker
 
-> You can get the latest Docker Version from the Docker Official Website 
+ You can get the latest Docker Version from the Docker Official Website 
+
 > For Ubuntu based [here](https://docs.docker.com/engine/install/ubuntu/)
 > For Debian based [here](https://docs.docker.com/engine/install/debian/)
 > For Red Hat/CentOS [here](https://docs.docker.com/engine/install/centos/)
+
 * Docker Compose
 
-> For Debian based use this commmand
-
-```
-sudo apt install docker-compose
-```
-
-> For RedHat Based machine use this command
-
-```
-sudo yum install docker-compose
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
-
-### Installation
+### Setup Environment 
 * Create a network interface 
 
 ```
@@ -55,30 +50,32 @@ docker-compose up
 ```
 
 ### Testing 
-Testing your site by typing your host IP address with port 443 for ssl connection
+Testing your container by typing your host IP address with ```HTTPS``` for TLS/SSL connection
 
 ### Optional Configuration
 
 #### Change the max file size for upload
 
-> To increase the maximum file size to upload on WordPress, change these setting to enables it
+> To increase the maximum file size to upload on WordPress, change these settings to enable it
 
 * Nginx Configuration [nginx.conf](./nginx/my-nginx.conf)
 
 ```
-client_max_body_size 100M # Can be increase at any size, using M at standard size
+# Can be increase at any size, using M as standard unit (Megabyte)
+client_max_body_size 100M 
 ```
 
 * PHP-FPM Configuration [php.init](./wordpress/php-fpm/my-php-development.ini)
 
 ```
+# Can be increase at any size, using M as standard unit (Megabyte)
 post_max_size = 200M
-upload_max_filesize = 200M # Can be increase at any size, using M at standard size
+upload_max_filesize = 200M 
 ```
 
 #### Allow unfiltered upload 
 
-> To allow upload unsupported file, change the [wp-config.conf](./wordpress/wp-config/my-wp-config.php)
+> To allow upload unsupported file, change the [wp-config.conf](./wordpress/wp-config/my-wp-config.php) under the ```$table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');``` line
 
 ```
 define('ALLOW_UNFILTERED_UPLOADS', true);
@@ -87,6 +84,6 @@ define('ALLOW_UNFILTERED_UPLOADS', true);
 
 ### Securing Docker daemon with TLS and remote access to Docker Engine (Optional)
 
-> To directly control the Docker Engine inside remote VM or cloud servers without having to resolve with SSH connection. Even tho SSH connection is practically secure with private key from the client side and public key on the server side but the SSH protocol uses port 22 which is a well-known port that many outsiders already knew and may attempt to access it and login to the VM. Instead, if the VM is only running docker then the client side doesn't need to access and control the Docker Engine via SSH connection (the client side could if they want to).
+> To directly control the Docker Engine inside a remote VM or cloud servers without having to resolve with SSH connection. Even tho SSH connection is practically secure with a private key from the client-side and public key on the server-side but the SSH protocol uses port 22 which is a well-known port that many outsiders already knew and may attempt to access and login to the VM. Instead, if the VM is only running docker then the client-side doesn't need to access and control the Docker Engine via SSH connection (the client-side could if they want to).
 > For more information, click [here](./REMOTE.MD)
 

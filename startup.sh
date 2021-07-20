@@ -112,9 +112,12 @@ days=${days:-365}
 read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
+read -p "Specify the server name: " 	server_name
+server_name=${server_name:-localhost}
+
 
 # Creating key for SSL connection
-
+sudo mkdir ./nginx/ssl
 sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
 
 # Export all variable to the environment file
@@ -135,6 +138,7 @@ sed "s/<key>/$keyname/g" -i .env
 sed "s/<certificate>/$certname/g" -i .env
 sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
+sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
