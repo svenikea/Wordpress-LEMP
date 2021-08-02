@@ -1,0 +1,13 @@
+language: bash
+
+sudo: required
+env: 
+  - distro: centos7
+  - distro: centos8
+  - distro: debian9
+  - distro: debian10
+  - distro: ubuntu1604
+  - distro: ubuntu1804
+
+script:
+  - chmod +x startup.sh
