@@ -16,19 +16,47 @@ apt () {
 	# Add Docker repository
 	if [[ $ID == "debian" ]]
 	then
-		curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-		echo \
-			"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
-			$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		if [[ $VERSION_ID == "9" ]]
+		then
+			curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+			echo \
+				"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+				$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			sudo apt-get update 
+			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+		elif [[ $VERSION_ID -lt 9 ]]
+		then 
+			echo "Detected $PRETTY_NAME which is not supported"
+			exit 0
+		fi
 	elif [[ $ID == "ubuntu" ]]
 	then
-		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-		echo \
-		"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-		$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo apt-get update
-	sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose
+		if [[ $VERSION_ID == "16.04" ]]
+		then
+			sudo gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 9BDB3D89CE49EC21
+			sudo gpg --export --armor 9BDB3D89CE49EC21 | sudo apt-key add -
+			sudo add-apt-repository "deb [arch=amd64] \
+    		https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+			sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+			sudo apt-get update 
+			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+		elif [[ $VERSION_ID -lt 16.04 ]]
+		then 
+			echo "Detected $PRETTY_NAME which is not supported"
+			exit 0
+		elif [[ $VERSION_ID == "18.04" ]]
+		then
+			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+			echo \
+			"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+			$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+			sudo apt-get update
+			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+		fi
 	fi
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 }
 
 
@@ -68,74 +96,73 @@ fi
 
 clear
 
-# Adding user to docker group
-sudo usermod -aG docker $(whoami)
 
 # Asking for network name for docker
-read -p "Network Name (Default is net): " network_name
+read -t 2 -p "Network Name (Default is net): " network_name
 network_name=${network_name:-net}
 
 # Asking for Container name
 ## Wordpress 
-read -p "Wordpress Container Name (Default is wp): " wp_container_name
+read -t 2 -p "Wordpress Container Name (Default is wp): " wp_container_name
 wp_container_name=${wp_container_name:-wp}
-read -p "Wordpress  Hostname (Default is wordpress): " wp_hostname
+read -t 2 -p "Wordpress  Hostname (Default is wordpress): " wp_hostname
 wp_hostname=${wp_hostname:-wordpress}
 
 ## Database
-read -p "Database Container Name (Default is db): " db_container_name
+read -t 2 -p "Database Container Name (Default is db): " db_container_name
 db_container_name=${db_container_name:-db}
-read -p "Database Hostname (Default is mysql): " db_hostname
+read -t 2 -p "Database Hostname (Default is mysql): " db_hostname
 db_hostname=${db_hostname:-mysql}
-read -p "Database Database Name (Default is mysql): " db_table
+read -t 2 -p "Database Database Name (Default is mysql): " db_table
 db_table=${db_table:-mysql}
-read -p "Database User Name (Default is user): " db_username
+read -t 2 -p "Database User Name (Default is user): " db_username
 db_username=${db_username:-user}
-read -p "Database User Password (Default is password): " db_password
+read -t 2 -p "Database User Password (Default is password): " db_password
 db_password=${db_password:-password}
 
 
 ## Website
-read -p "Web Container name (Default is web): " web_container_name
+read -t 2 -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
-read -p "Web hostname (Default is web): " web_hostname
+read -t 2 -p "Web hostname (Default is web): " web_hostname
 web_hostname=${web_hostname:-web}
 echo "SSL Connection keys and Cert"
-read -p "The key name (Default is server): " keyname
+read -t 2 -p "The key name (Default is server): " keyname
 keyname=${keyname:-server}
 keyname+='.key'
-read -p "The Cert name (Default is server): " certname
+read -t 2 -p "The Cert name (Default is server): " certname
 certname=${certname:-server}
 certname+='.crt'
-read -p "How many days does this key will expires (Default is 365): " days
+read -t 2 -p "How many days does this key will expires (Default is 365): " days
 days=${days:-365}
-read -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
+read -t 2 -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
-read -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
-read -p "Specify the server name: " 	server_name
+read -t 2 -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
+allowed_unfilterd=${allowed_unfilterd:y}
+read -t 2 -p "Specify the server name: " 	server_name
 server_name=${server_name:-localhost}
 
 
 # Creating key for SSL connection
-sudo mkdir ./nginx/ssl
-sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname}
+sudo mkdir -p nginx/ssl
+sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname} -subj "/C=US/ST=GA/L=Atlanta/O=NHK Inc/OU=DevOps Department/CN=wordpress-test.com"
 
 # Export all variable to the environment file
-sed "s/net/$network_name/g" -i .env
-sed "s/wp/$wp_container_name/g" -i .env
-sed "s/wordpress/$wp_hostname/g" -i .env
-sed "s/mysql/$db_hostname/g" -i .env
-sed "s/db/$db_container_name/g" -i .env
-sed "s/user/$db_username/g" -i .env
-sed "s/password/$db_password/g" -i .env
-sed "s/mysql/$db_table/g" -i .env
-sed "s/web/$web_container_name/g" -i .env
-sed "s/web/$web_hostname/g" -i .env
+sed "s/net/$network_name/g" -i ./.env
+sed "s/wp/$wp_container_name/g" -i ./.env
+sed "s/wordpress/$wp_hostname/g" -i ./.env
+sed "s/mysql/$db_hostname/g" -i ./.env
+sed "s/db/$db_container_name/g" -i ./.env
+sed "s/user/$db_username/g" -i ./.env
+sed "s/password/$db_password/g" -i ./.env
+sed "s/mysql/$db_table/g" -i ./.env
+sed "s/web/$web_container_name/g" -i ./.env
+sed "s/web/$web_hostname/g" -i ./.env
 sed "s/<MB>/$file_size/g" -i ./nginx/my-nginx.conf
 sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
 sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
-sed "s/<key>/$keyname/g" -i .env
-sed "s/<certificate>/$certname/g" -i .env
+sed "s/<key>/$keyname/g" -i ./.env
+sed "s/<certificate>/$certname/g" -i ./.env
 sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
@@ -151,7 +178,11 @@ fi
 
 # Start Docker Systemd
 sudo systemctl start docker
-sudo systemctl enable
+
+
+# Adding user to docker group
+sudo [ $(getent group docker) ] || groupadd docker
+sudo usermod -aG docker $(whoami)
 
 # Run the Docker Compose
 sudo docker network create -d bridge ${network_name}
@@ -168,4 +199,9 @@ echo "|  $db_container_name		   |    $database_ip           	  |"
 echo "---------------------------------------------"
 echo "|	$web_container_name		   |	$web_ip 		  |"
 echo "============================================="
-echo "Go to this IP $web_ip or address of this system and go to your browser and check it out"
+if [[ -z "$wordpress_ip" || -z "$database_ip" || -z "$web_ip" ]];
+then
+	exit 1
+else
+	echo "Go to this IP $web_ip or address of this system and go to your browser and check it out"
+fi
