@@ -1,5 +1,5 @@
 # Wordpress with LEMP Technology Stack in Docker Container
-[![Build Status](https://travis-ci.com/svenikea/Wordpress-LEMP.svg?branch=main)](https://travis-ci.com/svenikea/Wordpress-LEMP)
+[![Build Status](https://travis-ci.com/svenikea/Wordpress-LEMP.svg?branch=main)](https://travis-ci.com/svenikea/Wordpress-LEMP) [![Workflow Actions Status](https://github.com/svenikea/Wordpress-LEMP/workflows/Build-Environment/badge.svg)](https://github.com/svenikea/Wordpress-LEMP/actions)
 
 The following image have been used:
 
