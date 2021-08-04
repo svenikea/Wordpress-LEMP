@@ -1,4 +1,6 @@
 # Wordpress with LEMP Technology Stack in Docker Container
+[![Build Status](https://travis-ci.com/svenikea/Wordpress-LEMP.svg?branch=main)](https://travis-ci.com/svenikea/Wordpress-LEMP)
+
 The following image have been used:
 
 * PHP 7.4.19
