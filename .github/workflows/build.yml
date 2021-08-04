@@ -1,5 +1,4 @@
-name: Testing script for each Linux environment
-
+name: Build-Environment
 on:
   push:
 
