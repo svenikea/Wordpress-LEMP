@@ -172,6 +172,8 @@ sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
 then
 	sed  "s/<ALlow_Filter>/define('ALLOW_UNFILTERED_UPLOADS', true);/g" -i ./wordpress/wp-config/my-wp-config-docker.php
+else
+	sed  "s/<ALlow_Filter>//g" -i ./wordpress/wp-config/my-wp-config-docker.php
 fi
 
 
