@@ -96,7 +96,6 @@ fi
 
 clear
 
-
 # Asking for network name for docker
 read -t 2 -p "Network Name (Default is net): " network_name
 network_name=${network_name:-net}
@@ -120,7 +119,6 @@ db_username=${db_username:-user}
 read -t 2 -p "Database User Password (Default is password): " db_password
 db_password=${db_password:-password}
 
-
 ## Website
 read -t 2 -p "Web Container name (Default is web): " web_container_name
 web_container_name=${web_container_name:-web}
@@ -138,10 +136,9 @@ days=${days:-365}
 read -t 2 -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -t 2 -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
-allowed_unfilterd=${allowed_unfilterd:y}
+allowed_unfilterd=${allowed_unfilterd:-y}
 read -t 2 -p "Specify the server name: " 	server_name
 server_name=${server_name:-localhost}
-
 
 # Creating key for SSL connection
 sudo mkdir -p nginx/ssl
@@ -171,21 +168,13 @@ sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
 if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
 then
-	sed  "s/<ALlow_Filter>/define('ALLOW_UNFILTERED_UPLOADS', true);/g" -i ./wordpress/wp-config/my-wp-config-docker.php
+    sed  "s/Allow_Filter/define('ALLOW_UNFILTERED_UPLOADS', true);/g" -i ./wordpress/wp-config/my-wp-config-sample.php
 else
-	sed  "s/<ALlow_Filter>//g" -i ./wordpress/wp-config/my-wp-config-docker.php
+    sed  "s/Allow_Filter//g" -i ./wordpress/wp-config/my-wp-config-sample.php
 fi
-
-
 
 # Start Docker Systemd
 sudo systemctl start docker
-
-
-# Adding user to docker group
-sudo [ $(getent group docker) ] || groupadd docker
-sudo usermod -aG docker $(whoami)
-
 # Run the Docker Compose
 sudo docker network create -d bridge ${network_name}
 sudo docker-compose up -d

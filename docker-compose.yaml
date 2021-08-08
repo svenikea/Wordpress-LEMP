@@ -19,7 +19,6 @@ services:
                         WORDPRESS_DEBUG: 1
                 volumes:
                         - wordpress:/var/www/html
-                        - ./wordpress/wp-config/my-wp-config-docker.php:/var/www/html/wp-config.php
                         - ./wordpress/php-fpm/my-php-development.ini:/usr/local/etc/php/php.ini
                 depends_on:
                         - db
@@ -49,6 +48,8 @@ services:
                         - 443:443
                 volumes:
                         - wordpress:/var/www/html
+                        - ./wordpress/wp-config/functions.php:/var/www/html/wp-includes/functions.php:rw
+                        - ./wordpress/wp-config/my-wp-config-sample.php:/var/www/html/wp-config-sample.php:rw
                         - ./nginx/my-nginx.conf:/etc/nginx/nginx.conf
                         - ./nginx/my-default.conf:/etc/nginx/conf.d/wordpress.conf
                         - ./nginx/ssl:/etc/nginx/certs/
