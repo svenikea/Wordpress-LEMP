@@ -164,7 +164,6 @@ sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
-sed "s/mysql/$db_table/g" -i ./wordpress/wp-config/my-wp-config-docker.php
 
 if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
 then
