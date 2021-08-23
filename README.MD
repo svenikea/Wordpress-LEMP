@@ -77,9 +77,10 @@ upload_max_filesize = 200M
 
 #### Allow unfiltered upload 
 
-> To allow upload unsupported file, change the [wp-config.conf](./wordpress/wp-config/my-wp-config.php) under the ```$table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');``` line
+> To allow upload unsupported file, change the [compose file](docker-compose.yaml) under 
 
-```
+```                        
+WORDPRESS_CONFIG_EXTRA: |
 define('ALLOW_UNFILTERED_UPLOADS', true);
 ```
 
