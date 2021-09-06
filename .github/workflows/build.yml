@@ -1,4 +1,4 @@
-name: Build-Environment
+name: Github-Action
 on:
   push:
 
