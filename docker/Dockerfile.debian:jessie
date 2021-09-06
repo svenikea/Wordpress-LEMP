@@ -1,0 +1,7 @@
+FROM debian:jessie
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+&& apt-get install -y sudo curl openssl \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /Wordpress-LEMP
+ENTRYPOINT ["/sbin/init"]
