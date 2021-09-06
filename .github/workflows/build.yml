@@ -20,7 +20,7 @@ jobs:
         ./daemon-config.sh
         docker pull ${{ matrix.distribution }}
         ls -al ./travis/Dockerfile.${{ matrix.distribution }}
-        docker build . --tag=${{ matrix.distribution }} --file=./travis/Dockerfile.${{ matrix.distribution }} --no-cache --rm 
+        docker build . --tag=${{ matrix.distribution }} --file=./docker/Dockerfile.${{ matrix.distribution }} --no-cache --rm 
       shell: bash
 
     - name: Building Test
