@@ -1,9 +1,0 @@
-FROM debian:stretch
-
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    systemd \
-&& apt-get install -y sudo curl openssl \
- && rm -rf /var/lib/apt/lists/*
-WORKDIR /Wordpress-LEMP
-
-ENTRYPOINT ["/bin/systemd"]
