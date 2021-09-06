@@ -19,7 +19,6 @@ jobs:
         chmod +x daemon-config.sh
         ./daemon-config.sh
         docker pull ${{ matrix.distribution }}
-        ls -al ./travis/Dockerfile.${{ matrix.distribution }}
         docker build . --tag=${{ matrix.distribution }} --file=./docker/Dockerfile.${{ matrix.distribution }} --no-cache --rm 
       shell: bash
 
