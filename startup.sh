@@ -40,7 +40,7 @@ apt () {
 			sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 			sudo apt-get update 
 			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-		elif [[ $VERSION_ID -lt 16.04 ]]
+		elif [[ $VERSION_ID -lt "16.04" ]]
 		then 
 			echo "Detected $PRETTY_NAME which is not supported"
 			exit 0
@@ -106,6 +106,7 @@ read -t 2 -p "Wordpress Container Name (Default is wp): " wp_container_name
 wp_container_name=${wp_container_name:-wp}
 read -t 2 -p "Wordpress  Hostname (Default is wordpress): " wp_hostname
 wp_hostname=${wp_hostname:-wordpress}
+key=$(curl https://api.wordpress.org/secret-key/1.1/salt/)
 
 ## Database
 read -t 2 -p "Database Container Name (Default is db): " db_container_name
@@ -164,6 +165,7 @@ sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
+#sed -e '49,56d' -i  ./wordpress/wp-config/my-wp-config-sample.php
 
 if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
 then
