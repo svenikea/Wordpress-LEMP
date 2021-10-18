@@ -31,7 +31,7 @@ apt () {
 		fi
 	elif [[ $ID == "ubuntu" ]]
 	then
-		if [[ $VERSION_ID == "16.04" ]]
+		if [[ "$VERSION_ID == 16.04" ]]
 		then
 			sudo gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 9BDB3D89CE49EC21
 			sudo gpg --export --armor 9BDB3D89CE49EC21 | sudo apt-key add -
@@ -40,11 +40,11 @@ apt () {
 			sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 			sudo apt-get update 
 			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-		elif [[ $VERSION_ID -lt "16.04" ]]
+		elif [[ "$VERSION_ID -lt 16.04" ]]
 		then 
 			echo "Detected $PRETTY_NAME which is not supported"
 			exit 0
-		elif [[ $VERSION_ID == "18.04" ]]
+		elif [[ "$VERSION_ID == 18.04" ]]
 		then
 			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \
