@@ -139,7 +139,7 @@ file_size=${file_size:-100M}
 read -t 2 -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
 allowed_unfilterd=${allowed_unfilterd:-y}
 read -t 2 -p "Specify the server name: " 	server_name
-server_name=${server_name:-localhost}
+server_name=${server_name:-wordpress-docker.com}
 
 ## PHP
 read -t 2 -p "PHP container name (Default is php-alpine): " php_container_name
@@ -160,7 +160,7 @@ sed "s/db/$db_container_name/g" -i ./.env
 sed "s/user/$db_username/g" -i ./.env
 sed "s/password/$db_password/g" -i ./.env
 sed "s/mysql/$db_table/g" -i ./.env
-sed "s/web/$web_container_name/g" -i ./.env
+sed "s/nginx/$web_container_name/g" -i ./.env
 sed "s/web/$web_hostname/g" -i ./.env
 sed "s/php-alpine/$php_container_name/g" -i ./.env
 sed "s/php/$php_hostname/g" -i ./.env
@@ -172,8 +172,7 @@ sed "s/<certificate>/$certname/g" -i ./.env
 sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
-sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
-sed "s/<php>/$php_container_name/g" -i ./nginx/my-default.conf
+sed "s/<localhost>/$server_name/g" -i ./.env
 
 # Start Docker Systemd
 sudo systemctl start docker
