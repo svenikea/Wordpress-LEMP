@@ -141,6 +141,12 @@ allowed_unfilterd=${allowed_unfilterd:-y}
 read -t 2 -p "Specify the server name: " 	server_name
 server_name=${server_name:-localhost}
 
+## PHP
+read -t 2 -p "PHP container name (Default is php-alpine): " php_container_name
+php_container_name=${php_container_name:-php-alpine}
+read -t 2 -p "PHP hostname name (Default is php-alpine): " php_hostname
+php_hostname=${php_hostname:-php-host}
+
 # Creating key for SSL connection
 sudo mkdir -p nginx/ssl
 sudo openssl req -x509 -nodes -newkey rsa:4096 -days ${days} -keyout ./nginx/ssl/${keyname} -out ./nginx/ssl/${certname} -subj "/C=US/ST=GA/L=Atlanta/O=NHK Inc/OU=DevOps Department/CN=wordpress-test.com"
@@ -156,6 +162,8 @@ sed "s/password/$db_password/g" -i ./.env
 sed "s/mysql/$db_table/g" -i ./.env
 sed "s/web/$web_container_name/g" -i ./.env
 sed "s/web/$web_hostname/g" -i ./.env
+sed "s/php-alpine/$php_container_name/g" -i ./.env
+sed "s/php/$php_hostname/g" -i ./.env
 sed "s/<MB>/$file_size/g" -i ./nginx/my-nginx.conf
 sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./php/php.ini
 sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./php/php.ini
@@ -165,7 +173,6 @@ sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
 sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
-#sed -e '49,56d' -i  ./wordpress/wp-config/my-wp-config-sample.php
 
 # Start Docker Systemd
 sudo systemctl start docker

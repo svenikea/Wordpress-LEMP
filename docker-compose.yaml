@@ -11,9 +11,6 @@ services:
                 restart: always
                 container_name: ${WP_CONTAINER_NAME}
                 hostname: ${WP_HOSTNAME}
-                volumes:
-                        - wordpress:/var/www/html:rw
-                        - ./wordpress/wp-content:/var/www/html/wp-content 
                 environment:
                         WORDPRESS_DB_HOST: ${DATABASE_HOSTNAME}:3306
                         WORDPRESS_DB_USER: ${DATABASE_USERNAME}
@@ -23,7 +20,8 @@ services:
                 depends_on:
                         - db
                         - php
-
+                volumes:
+                        - wordpress:/var/www/html
         php:
                 build: ./php
                 image: php:custom
