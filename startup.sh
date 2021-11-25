@@ -157,8 +157,8 @@ sed "s/mysql/$db_table/g" -i ./.env
 sed "s/web/$web_container_name/g" -i ./.env
 sed "s/web/$web_hostname/g" -i ./.env
 sed "s/<MB>/$file_size/g" -i ./nginx/my-nginx.conf
-sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
-sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./wordpress/php-fpm/my-php-development.ini
+sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./php/php.ini
+sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./php/php.ini
 sed "s/<key>/$keyname/g" -i ./.env
 sed "s/<certificate>/$certname/g" -i ./.env
 sed "s/<key>/$keyname/g" -i ./nginx/my-default.conf
@@ -166,13 +166,6 @@ sed "s/<certificate>/$certname/g" -i ./nginx/my-default.conf
 sed "s/<localhost>/$server_name/g" -i ./nginx/my-default.conf
 sed "s/wordpress/$wp_hostname/g" -i ./nginx/my-default.conf
 #sed -e '49,56d' -i  ./wordpress/wp-config/my-wp-config-sample.php
-
-if [[ $allowed_unfilterd == "yes" || $allowed_unfilterd == "y" ]]
-then
-    sed  "s/Allow_Filter/define('ALLOW_UNFILTERED_UPLOADS', true);/g" -i ./wordpress/wp-config/my-wp-config-sample.php
-else
-    sed  "s/Allow_Filter//g" -i ./wordpress/wp-config/my-wp-config-sample.php
-fi
 
 # Start Docker Systemd
 sudo systemctl start docker
