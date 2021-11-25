@@ -15,10 +15,10 @@ services:
                         - wordpress:/var/www/html:rw
                         - ./wordpress/wp-content:/var/www/html/wp-content 
                 environment:
-                        #WORDPRESS_DB_HOST: ${DATABASE_HOSTNAME}:3306
-                        #WORDPRESS_DB_USER: ${DATABASE_USERNAME}
-                        #WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
-                        #WORDPRESS_DB_NAME: ${DATABASE_TABLE}
+                        WORDPRESS_DB_HOST: ${DATABASE_HOSTNAME}:3306
+                        WORDPRESS_DB_USER: ${DATABASE_USERNAME}
+                        WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
+                        WORDPRESS_DB_NAME: ${DATABASE_TABLE}
 
                 depends_on:
                         - db
