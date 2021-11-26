@@ -24,7 +24,7 @@ services:
                                 define('FORCE_SSL_LOGIN', true);
                 volumes:
                         - wordpress:/var/www/html
-                        - php/php.ini:/usr/local/etc/php/php.ini
+                        - ./php/php.ini:/usr/local/etc/php/php.ini
                 depends_on:
                         - db
                 ports:

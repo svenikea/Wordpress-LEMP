@@ -134,10 +134,6 @@ certname=${certname:-server}
 certname+='.crt'
 read -t 2 -p "How many days does this key will expires (Default is 365): " days
 days=${days:-365}
-read -t 2 -p "Specify the max file size in (M) allowed to upload (Default is 100MB): " file_size
-file_size=${file_size:-100M}
-read -t 2 -p "Allow unfiltered upload (yes[y]/no[n]): " allowed_unfilterd
-allowed_unfilterd=${allowed_unfilterd:-y}
 read -t 2 -p "Specify the server name: " 	server_name
 server_name=${server_name:-wordpress-docker.com}
 
@@ -164,7 +160,6 @@ sed "s/nginx/$web_container_name/g" -i ./.env
 sed "s/web/$web_hostname/g" -i ./.env
 sed "s/php-alpine/$php_container_name/g" -i ./.env
 sed "s/php/$php_hostname/g" -i ./.env
-sed "s/<MB>/$file_size/g" -i ./nginx/my-nginx.conf
 sed "s/post_max_size = <MB>/post_max_size = $file_size/g" -i ./php/php.ini
 sed "s/upload_max_filesize = <MB>/upload_max_filesize = $file_size/g" -i ./php/php.ini
 sed "s/<key>/$keyname/g" -i ./.env
