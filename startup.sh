@@ -140,6 +140,8 @@ server_name=${server_name:-wordpress-docker.com}
 ## PHP
 read -t 2 -p "PHP container name (Default is php-alpine): " php_container_name
 php_container_name=${php_container_name:-php-alpine}
+read -t -p "Upload Max File size (Default is 100MB): " file_size
+file_size=${file_size:-100M}
 read -t 2 -p "PHP hostname name (Default is php-alpine): " php_hostname
 php_hostname=${php_hostname:-php-host}
 
