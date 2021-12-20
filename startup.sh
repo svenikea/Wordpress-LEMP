@@ -19,7 +19,7 @@ apt () {
 	then
 		if [[ $tmp == 9 ]]
 		then
-			echo "DO stuff on debian 9"
+			echo "Installing Docker"
 			apt_update
 			curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \
@@ -36,6 +36,8 @@ apt () {
 	then
 		if [[ $tmp == 16 ]]
 		then
+			echo "Installing Docker"
+			apt_update
 			sudo gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 9BDB3D89CE49EC21
 			sudo gpg --export --armor 9BDB3D89CE49EC21 | sudo apt-key add -
 			sudo add-apt-repository "deb [arch=amd64] \
@@ -49,6 +51,7 @@ apt () {
 			exit 0
 		elif [[ $tmp == 18 ]]
 		then
+			echo "Installing Docker"
 			apt_update
 			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \

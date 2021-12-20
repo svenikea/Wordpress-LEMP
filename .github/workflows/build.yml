@@ -10,10 +10,6 @@ jobs:
         distribution: ["centos:7", "centos:8", "ubuntu:bionic", "ubuntu:xenial", "debian:jessie", "debian:stretch"]
     steps:
     - uses: actions/checkout@v2
-    - name: Installing Docker
-      run: |
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        DRY_RUN=1 sh ./get-docker.sh
     - name: Starting Test Build Environment
       run: |
         chmod +x daemon-config.sh
