@@ -1,10 +1,8 @@
-#! /bin/bash 
-
+#! /bin/bash
 
 # Load Distribution Environment variables
 source /etc/os-release
-
-apt () {
+apt_update() {
 	sudo apt-get update
 	sudo apt-get -y install \
 		apt-transport-https \
@@ -14,24 +12,29 @@ apt () {
 		lsb-release
 	# Add Docker GPG Key
 	# Add Docker repository
+}
+let tmp=${VERSION_ID::2}
+apt () {
 	if [[ $ID == "debian" ]]
 	then
-		if [[ $VERSION_ID == "9" ]]
+		if [[ $tmp == 9 ]]
 		then
+			echo "DO stuff on debian 9"
+			apt_update
 			curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \
 				"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
 				$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 			sudo apt-get update 
 			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-		elif [[ $VERSION_ID -lt 9 ]]
+		elif [[ $tmp -lt 9 ]]
 		then 
 			echo "Detected $PRETTY_NAME which is not supported"
 			exit 0
 		fi
 	elif [[ $ID == "ubuntu" ]]
 	then
-		if [[ "$VERSION_ID == 16.04" ]]
+		if [[ $tmp == 16 ]]
 		then
 			sudo gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 9BDB3D89CE49EC21
 			sudo gpg --export --armor 9BDB3D89CE49EC21 | sudo apt-key add -
@@ -40,12 +43,13 @@ apt () {
 			sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 			sudo apt-get update 
 			sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-		elif [[ "$VERSION_ID -lt 16.04" ]]
+		elif [[ $tmp -lt 16 ]]
 		then 
 			echo "Detected $PRETTY_NAME which is not supported"
 			exit 0
-		elif [[ "$VERSION_ID == 18.04" ]]
+		elif [[ $tmp == 18 ]]
 		then
+			apt_update
 			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \
 			"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
@@ -80,7 +84,6 @@ pacman () {
 
 if [[ $ID == "debian" || $ID == "ubuntu" ]] 
 then
-	echo "Detected $PRETTY_NAME which is supported"
 	apt
 elif [[ $ID == "centos" || $ID == "rhel"  ]]
 then
