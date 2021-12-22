@@ -1,0 +1,5 @@
+FROM archlinux:latest
+ENV container docker
+
+WORKDIR /Wordpress-LEMP
+ENTRYPOINT ["/sbin/init"]

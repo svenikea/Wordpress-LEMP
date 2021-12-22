@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-18.04
     strategy: 
       matrix:
-        distribution: ["centos:7", "centos:8", "ubuntu:bionic", "ubuntu:xenial", "debian:jessie", "debian:stretch"]
+        distribution: ["centos:7", "centos:8", "ubuntu:bionic", "ubuntu:xenial", "debian:jessie", "debian:stretch", "archlinux:latest"]
     steps:
     - uses: actions/checkout@v2
-    - name: Starting Test Build Environment
+    - name: Building Linux Environment
       run: |
         chmod +x daemon-config.sh
         ./daemon-config.sh
@@ -18,7 +18,7 @@ jobs:
         docker build . --tag=${{ matrix.distribution }} --file=./docker/Dockerfile.${{ matrix.distribution }} --no-cache --rm 
       shell: bash
 
-    - name: Building Test
+    - name: Running Script on Linux Environment
       run: |
         container_id=$(mktemp)
         docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${PWD}:/Wordpress-LEMP:rw ${{ matrix.distribution }} > "${container_id}"

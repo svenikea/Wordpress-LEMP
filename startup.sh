@@ -1,7 +1,11 @@
 #! /bin/bash
 
 # Load Distribution Environment variables
-source /etc/os-release
+if [ -f /etc/os-release ]; then
+	source /etc/os-release
+elif [ -f /lib/os-release ]; then
+	source /lib/os-release
+fi
 apt_update() {
 	sudo apt-get update
 	sudo apt-get -y install \
