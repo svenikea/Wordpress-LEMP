@@ -2,9 +2,10 @@
 
 # Load Distribution Environment variables
 if [ -f /etc/os-release ]; then
-	source /etc/os-release
-elif [ -f /lib/os-release ]; then
-	source /lib/os-release
+	. /etc/os-release
+fi
+if [ -f /lib/os-release ]; then
+	. /lib/os-release
 fi
 apt_update() {
 	sudo apt-get update
@@ -85,8 +86,7 @@ yum () {
 }
 
 pacman () {
-	sudo pacman -Sy
-	sudo pacman -S docker docker-compose git base-devel --needed
+	sudo pacman -Sy docker docker-compose git base-devel --needed --noconfirm
 }
 
 if [[ $ID == "debian" || $ID == "ubuntu" ]] 
@@ -96,7 +96,7 @@ elif [[ $ID == "centos" || $ID == "rhel"  ]]
 then
 	echo "Detected $PRETTY_NAME which is supported"
 	yum
-elif [[ $PID == "arch" || $PID == "manjaro" ]]
+elif [[ $ID == "arch" || $ID == "manjaro" ]]
 then
 	echo "Detected $PRETTY_NAME which is supported"
 	pacman
@@ -150,7 +150,7 @@ server_name=${server_name:-wordpress-docker.com}
 ## PHP
 read -t 2 -p "PHP container name (Default is php-alpine): " php_container_name
 php_container_name=${php_container_name:-php-alpine}
-read -t -p "Upload Max File size (Default is 100MB): " file_size
+read -t 2 -p "Upload Max File size (Default is 100MB): " file_size
 file_size=${file_size:-100M}
 read -t 2 -p "PHP hostname name (Default is php-alpine): " php_hostname
 php_hostname=${php_hostname:-php-host}
