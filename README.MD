@@ -8,7 +8,7 @@ The following image have been used:
 * WordPress 5.7.1
 * Nginx 1.19.10
 
-## Startup Wizard 
+## Quick Start
 
 > Using the startup wizard to install and run the project
 
@@ -83,7 +83,7 @@ upload_max_filesize = 200M
 WORDPRESS_CONFIG_EXTRA: |
 define('ALLOW_UNFILTERED_UPLOADS', true);
 ```
-
+* The ```WORDPRESS_CONFIG_EXTRA```  in compose file works but will not visible inside the container
 
 ### Securing Docker daemon with TLS and remote access to Docker Engine (Optional)
 
