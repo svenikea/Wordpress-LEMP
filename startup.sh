@@ -57,8 +57,9 @@ apt () {
 		elif [[ $tmp == 18 ]]
 		then
 			echo "Installing Docker"
-			apt_update
-			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+			apt update
+			apt-get -y install ca-certificates curl gnupg lsb-release
+			curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 			echo \
 			"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
 			$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -117,8 +118,8 @@ sudo docker network create -d bridge net
 sudo docker-compose up -d
 web_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q web))
 database_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q db))
-wordpress_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sudo docker-compose ps -q wordpress)
-redis_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sudo docker-compose ps -q cache)
+wordpress_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q wordpress))
+redis_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q cache))
 redis_ping=$(sudo docker exec -it $(sudo docker-compose ps -q wordpress) /bin/sh -c "apk add;redis-cli -h ${redis_ip}  -p 6379 ping")
 status_code=$(curl -s -o /dev/null -w "%{http_code}" localhost)
 if [[ -z "$wordpress_ip" || -z "$database_ip" || -z "$web_ip" || -z "$redis_ip" ]];then
