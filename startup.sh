@@ -113,7 +113,7 @@ sudo openssl req -x509 -nodes -newkey rsa:4096 -days 365 -keyout ./nginx/ssl/web
 # Start Docker Systemd
 sudo systemctl start docker
 # Run the Docker Compose
-sudo docker network create -d bridge ${network_name}
+sudo docker network create -d bridge net
 sudo docker-compose up -d
 web_ip=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q web))
 database_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker-compose ps -q db))
@@ -129,4 +129,5 @@ else
 	elif [[ "${status_code}" != 200 ]]; then
 		exit 1
 	fi
+	echo "All check are OK"
 fi
