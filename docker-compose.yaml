@@ -3,10 +3,11 @@ version: '3'
 volumes:
         wordpress:
         db:
+        cache:
 
 services:
         wordpress:
-                image: wordpress:5.8.2-fpm-alpine
+                image: wordpress:5.9.2-fpm-alpine
                 restart: always
                 container_name: ${WP_CONTAINER_NAME}
                 hostname: ${WP_HOSTNAME}
@@ -22,6 +23,9 @@ services:
                                 define('PATH_CURRENT_SITE', '/');
                                 define('FORCE_SSL_ADMIN', true);
                                 define('FORCE_SSL_LOGIN', true);
+                                define('WP_REDIS_PORT', 6379);
+                                define('WP_CACHE_KEY_SALT','localhost');
+                                define('WP_REDIS_HOST', cache);
                 volumes:
                         - wordpress:/var/www/html
                         - ./php/php.ini:/usr/local/etc/php/php.ini
@@ -44,6 +48,15 @@ services:
                         - db:/var/lib/mysql
                 ports:
                         - 3306:3306
+        cache: 
+                image: redis:6.2.6-alpine
+                restart: always
+                hostname: ${REDIS_HOSTNAME}
+                container_name: ${REDIS_CONTAINER_NAME}
+                volumes:
+                        - cache:/data
+                ports:
+                        - 6379:6379
         web:
                 image: nginx:1.21.4-alpine
                 hostname: ${NGINX_HOSTNAME}
