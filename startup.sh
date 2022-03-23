@@ -97,19 +97,19 @@ systemctl start docker
 # Run the Docker Compose
 docker network create -d bridge net
 docker-compose up -d
-web_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker-compose ps -q web))
-database_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker-compose ps -q db))
-wordpress_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker-compose ps -q wordpress))
-redis_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker-compose ps -q cache))
-redis_ping=$(docker exec -it $(docker-compose ps -q wordpress) /bin/sh -c "apk add;redis-cli -h ${redis_ip}  -p 6379 ping")
+web_id=$(docker-compose ps -q web)
+database_id=$(docker-compose ps -q db)
+wordpress_id=$(docker-compose ps -q wordpress)
+redis_id=$(docker-compose ps -q cache)
+web_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $web_id)
+database_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $database_id)
+wordpress_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $wordpress_id)
+redis_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $redis_id)
 status_code=$(curl -s -o /dev/null -w "%{http_code}" localhost)
-if [[ -z "$wordpress_ip"  ]] || [[ -z "$database_ip" ]] || [[ -z "$web_ip" ]] || [[ -z "$redis_ip" ]]; then
-	exit 1
+if [[ ! -z "$web_ip" && ! -z "$database_ip" && ! -z "$redis_ip" && ! -z "$wordpress_ip" && $status_code -eq 200 ]]; then
+	echo "All Check Finished!"
 else
-	if [[ "$redis_ping" != "PONG" ]]; then
-		exit 1
-	elif [[ ${status_code} != 200 ]]; then
-		exit 1
-	fi
+	echo "Error"
+	exit 1
 fi
-echo "All Check Finished!"
+
