@@ -1,10 +1,18 @@
 name: Github-Action
 on:
   push:
+    paths-ignore:
+      - '**.md'
+    branches:
+      - main
 
 jobs:
-  run_tests:
-    runs-on: ubuntu-18.04
+  build:
+    outputs:
+      build_status: ${{ steps.final.outputs.joboutput }}
+      job_name: ${{ steps.final.outputs.jobname }}
+    name: Run Distribution Test
+    runs-on: ubuntu-latest
     strategy: 
       matrix:
         distribution: ["centos:7", "centos:8", "ubuntu:bionic", "ubuntu:xenial", "debian:jessie", "debian:stretch", "archlinux:latest"]
@@ -25,4 +33,78 @@ jobs:
         docker exec "$(cat ${container_id})" env TERM=xterm bash startup.sh
         docker rm -f "$(cat ${container_id})"
       shell: bash
+    
+    - name: Get Job output
+      if: always()
+      id: final
+      run: |
+        echo "::set-output name=joboutput::${{ job.status }}"
+        echo "::set-output name=jobname::${{ github.job }}"
+    
+  slack:
+    name: Send Result to Slack
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: build
+    steps:
+      - name: Post to a Slack channel
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: commit,repo,ref,author,eventName,message,workflow
+          custom_payload: |
+            {
+                text: '${{ needs.build.outputs.build_status }}' === 'success' ? ':white_check_mark: <!channel> ${{ github.workflow }}' : ':poop:  <!channel> ${{ github.workflow }}',
+                attachments: [
+                    {
+                        color: '${{ needs.build.outputs.build_status }}' === 'success' ? '#009900' : '${{ needs.build.outputs.build_status }}' === 'failure' ? '#E45959' : '#dfb317',
+                        blocks: [
+                            {
+                                type: "section",
+                                fields: [
+                                  {
+                                    type: "mrkdwn",
+                                    text: `*Repository*\n${{ github.repository }}`
+                                  },
+                                  {
+                                    type: "mrkdwn",
+                                    text: `*Git Branch*\n${{ github.ref_name }}`
+                                  }
+                                ]
+                            },
+                            {
+                                type: "section",
+                                fields: [
+                                    {
+                                        type: "mrkdwn",
+                                        text: `*Commit*\n${process.env.AS_COMMIT}`
+                                    },
+                                    {
+                                        type: "mrkdwn",
+                                        text: `*Message*\n${{ github.event.head_commit.message }}`
+                                    }
+                                ]
+                            },
+                            {
+                                type: "section",
+                                fields: [
+                                    {
+                                        type: "mrkdwn",
+                                        text: `*Job*\n${{ needs.build.outputs.job_name }}`
+                                    },
+                                    {
+                                        type: "mrkdwn",
+                                        text: `*Status*\n${{ needs.build.outputs.build_status }}`
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+                }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.WORKFLOW_BOT_WEBHOOK_URL }}
+
+
+
 

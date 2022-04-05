@@ -3,10 +3,11 @@
 
 The following image have been used:
 
-* PHP 7.4.19
+* PHP 7.4.28
 * MySQL 5.7
-* WordPress 5.7.1
-* Nginx 1.19.10
+* Redis 6.2.6
+* WordPress 5.9.2
+* Nginx 1.21.4
 
 ## Quick Start
 
@@ -43,6 +44,13 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ```
 docker network create -d bridge <network_name>
+```
+
+### Generate TLS/SSL Certificate
+
+* OpenSSL
+```
+openssl req -x509 -nodes -newkey rsa:4096 -days 365 -keyout ./nginx/ssl/web.key -out ./nginx/ssl/web.crt -subj "/C=US/ST=GA/L=Atlanta/O=NHK Inc/OU=DevOps Department/CN=wordpress-test.com"
 ```
 
 ### Running with docker compose file 
