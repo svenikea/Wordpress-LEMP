@@ -53,6 +53,11 @@ docker network create -d bridge <network_name>
 openssl req -x509 -nodes -newkey rsa:4096 -days 365 -keyout ./nginx/ssl/web.key -out ./nginx/ssl/web.crt -subj "/C=US/ST=GA/L=Atlanta/O=NHK Inc/OU=DevOps Department/CN=wordpress-test.com"
 ```
 
+* dhparam
+```
+openssl dhparam -out dhparam.pem 1024
+```
+
 ### Running with docker compose file 
 
 ```
