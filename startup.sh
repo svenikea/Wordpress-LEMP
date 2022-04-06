@@ -91,7 +91,7 @@ clear
 # Creating key for SSL connection
 mkdir -p nginx/ssl
 openssl req -x509 -nodes -newkey rsa:4096 -days 365 -keyout ./nginx/ssl/web.key -out ./nginx/ssl/web.crt -subj "/C=US/ST=GA/L=Atlanta/O=NHK Inc/OU=DevOps Department/CN=wordpress-test.com"
-
+openssl dhparam -out ./nginx/ssl/dhparam.pem 1024
 # Start Docker Systemd
 systemctl start docker
 # Run the Docker Compose
