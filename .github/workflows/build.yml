@@ -52,7 +52,7 @@ jobs:
       shell: bash
     
     - name: Output Readme changed
-      if: step.readme_is_changed.outputs.readme_changed == 'True'
+      if: steps.readme_is_changed.outputs.readme_changed == 'True'
       run: echo "README has changed"
     
     - name: Get Job output
