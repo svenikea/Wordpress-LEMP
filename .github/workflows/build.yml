@@ -18,6 +18,23 @@ jobs:
         distribution: ["centos:7", "centos:8", "ubuntu:bionic", "ubuntu:xenial", "debian:jessie", "debian:stretch", "archlinux:latest"]
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+        
+    - name: Check if README.md is changed
+      id: readme_is_changed
+      shell: pwsh
+      run: |
+        # Diff HEAD with the previous commit
+        $diff = git diff --name-only HEAD^ HEAD
+
+        # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+        $SourceDiff = $diff | Where-Object { $_ -match 'README.MD' }
+        $HasDiff = $SourceDiff.Length -gt 0
+
+        # Set the output named "readme_changed"
+        Write-Host "::set-output name=readme_changed::$HasDiff"
+        
     - name: Building Linux Environment
       run: |
         chmod +x daemon-config.sh
@@ -33,6 +50,10 @@ jobs:
         docker exec "$(cat ${container_id})" env TERM=xterm bash startup.sh
         docker rm -f "$(cat ${container_id})"
       shell: bash
+    
+    - name: Output Readme changed
+      if: readme_is_changed.outputs.readme_changed == 'True'
+      run: echo "README has changed"
     
     - name: Get Job output
       if: always()
