@@ -90,7 +90,7 @@ upload_max_filesize = 200M
 
 #### Allow unfiltered upload 
 
-> To allow upload unsupported file, change the [compose file](docker-compose.yaml) under 
+> To allow upload unsupported file, change the [compose file](docker-compose.yaml) under these line
 
 ```                        
 WORDPRESS_CONFIG_EXTRA: |
